@@ -13,12 +13,19 @@ knitr::opts_chunk$set(echo = TRUE,
                       warning = FALSE, message = FALSE)
 ```
 
+<<<<<<< HEAD
+=======
+<FONT SIZE = "5">
+>>>>>>> 2cc1819c72045cb95e97b34d130b9b2645d8c452
 
 # **8.1 준비하기**
 - tidyverse로드하라
 
+<<<<<<< HEAD
 install.packages("tidyverse")
 
+=======
+>>>>>>> 2cc1819c72045cb95e97b34d130b9b2645d8c452
 ```{r}
 library(tidyverse)
 
@@ -28,6 +35,10 @@ library(tidyverse)
 위 코드 실행 시, 'tidyverse' 페키지 없음 오류 메시지 뜨면, 페키지 설치 후 'libary()'를 실행한다.
 
 ```{r}
+<<<<<<< HEAD
+=======
+install.packages("reader")
+>>>>>>> 2cc1819c72045cb95e97b34d130b9b2645d8c452
 library(tidyverse)
 ```
 
@@ -50,11 +61,16 @@ library(tidyverse)
 
 read_csv()의 첫 번쨰 인수가 가장 중요한데 바로 읽으려고 하는 파일의 경로다.
 
+<<<<<<< HEAD
 
 ```{r}
 library(tidyverse)
 library(readr)
 library(readxl)
+=======
+```{r}
+library(tidyverse)
+>>>>>>> 2cc1819c72045cb95e97b34d130b9b2645d8c452
 heights <- read_csv("heights.csv")
 ```
 
@@ -171,7 +187,11 @@ problems(x)
 - parse_factor()는 팩터형을 생성하는데, 팩터형은 R이 미리 정해지고 알려진 값으로 범주형 변수를 나타내기 위해 사용하는 데이터 구조이다.
 - parse_datetime(), parse_date(), pare_time()을 사용하면 다양한 날짜와 시각 데이터를 파싱할 수 있다. 날짜를 쓰는 방법을 다양하기 때문에 이 함수들이 가장 복잡하다. 다음 절들에서 더 자세히 살펴 보기로 하자
 
+<<<<<<< HEAD
 ## **8.3.1 숫자**
+=======
+## 8.3.1 숫자
+>>>>>>> 2cc1819c72045cb95e97b34d130b9b2645d8c452
 숫자 파싱은 간단해 보이지만, 다음의 세가지 문제 떄문에 까다롭다.
 
 - 세계 여러 지역에서 사람들은 숫자를 다르게 쓴다. 예를 들어 어떤 국가에서는 실수의 정수 부분과 소수 부분 사이에.를 쓰고 다른 국가에서는 ,를 쓴다.
@@ -565,7 +585,11 @@ library(feather)
 write_feather(challenge, "challeng.feather")
 ```
 
+<<<<<<< HEAD
 ```r
+=======
+```{r}
+>>>>>>> 2cc1819c72045cb95e97b34d130b9b2645d8c452
 library(feather)
 read_feather("challenge.feather")
 ```

@@ -2,6 +2,7 @@
 title: "chap 11. stringr로 하는 문자열"
 author: "dayoung"
 date: '2020 10 5 '
+<<<<<<< HEAD
 output:   
   html_document:
    toc: true
@@ -15,6 +16,13 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       warning = FALSE, message = FALSE)
+=======
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+>>>>>>> 2cc1819c72045cb95e97b34d130b9b2645d8c452
 ```
 
 
