@@ -1,0 +1,169 @@
+---
+title: "ch15_functions"
+author: "Sinhyung Park"
+date: '2020 10 7 '
+output: 
+  html_document:
+   toc: true
+   toc_float:
+     collapsed: false
+     smooth_scroll: true
+   theme: united
+   highlight: textmate
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE, message = FALSE)
+```
+
+Sys.setenv(LANGUAGE = "en")
+
+# Ch15_functions_함수
+
+
+##15.1 들어가기 
+
+- 데이터 과학자로서의 역량을 향상시키는 좋은 방법은 함수를 작성하는 것  
+- 함수 작성의 **세 가지 장점**  
+1. 연상시키는 이름을 함수에 부여하여 코드를 이해하기 쉽게 만들 수 있다.   
+2. 요구사항이 변경되면 여러 곳이 아닌 한 곳의 코드만 업데이트하면 된다.   
+3. 복사하여 붙여넣을 때 실수가 발생할 가능성이 차단된다.  
+(예, 변수 이름을 한 위치에만 업데이트하고 다른 위치에는 하지 않음)
+
+
+### 15.2 함수를 언제 작성해야 하나? 
+
+- 코드 블록을 두 번 이상 복사하여 붙여넣을 때마다 함수를 작성하는 것을 고려해야한다. 
+
+**예를 들어 보자**  
+
+```{r}
+df <- tibble::tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+
+df$a <- (df$a - min(df$a, na.rm = TRUE)) / 
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$b <- (df$b - min(df$b, na.rm = TRUE)) / 
+  (max(df$b, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$c <- (df$c - min(df$c, na.rm = TRUE)) / 
+  (max(df$c, na.rm = TRUE) - min(df$c, na.rm = TRUE))
+df$d <- (df$d - min(df$d, na.rm = TRUE)) / 
+  (max(df$d, na.rm = TRUE) - min(df$d, na.rm = TRUE))
+```
+
+-  각 열이 0 에서 1까지 값을 갖도록 리스케일(rescale)하는 코드 
+- 위와 같이 작성하다 보면 복붙을 할 텐데 그러다보면 오타가 발생하기 마련
+
+-->> **반복코드를 함수로 추출**
+
+```{r}
+df
+```
+
+
+```{r}
+(df$a - min(df$a, na.rm = TRUE)) / 
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+```
+- 이 코드는 입력이 df$a 하나이다. 
+- 입력을 더 명확하게 지정하려면 일반 이름을 가진 임시 변수를 사용하여 코드를 다시 작성하는 것이 좋다. 
+
+```{r}
+x <- df$a
+(x - min(x, na.rm = TRUE)) /
+  (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+```
+- 이 코드에는 데이터의 범위(range)계산을 세번하고 있는데, 한단계로 수행하는 것이 더 낫다. 
+
+```{r}
+rng <- range(x, na.rm = TRUE)
+ (x - rng[1]) / (rng[2] - rng[1])
+```
+- 중간 계산을 명명된 변수로 빼면 코드가 하는 일을 명확하게 할 수 있다. 
+- 코드를 단순화했고 작동하는지 확인했으므로 이제 함수로 변환시키자. 
+
+```{r}
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+rescale01(c(0, 5, 10))
+```
+
+**함수 생성에는 세 가지 주요 단계가 있다.**
+
+1. 함수 이름을 지어야한다. 여기선 rescale01이라고 했는데, 함수가 0과 1 사이에 놓이도록 벡터를 다시 스케일하기 때문이다.   
+
+2. function 내부에 함수 입력값, 즉 인수를 나열한다. 여기에서는 인수가 x 한 개만 있다. 여러 개가 있었다면 호출은 function(x, y, z)와 같을 것이다.    
+
+3. 개발한 코드를 함수의 본문(body), 즉 function(...) 다음에 오는 **{** 블록에 넣는다.
+
+**우리는 함수를 생성한 후 작동되도록 노력하는 것보다 작동되는 코드를 우선 만들고, 이를 함수로 변환하는 것이 더 쉽다는 것을 알아야한다.** 
+
+```{r}
+rescale01(c(-10, 0, 10))
+rescale01(c(1, 2, 3, NA, 5))
+```
+- 함수 작성을 계속하다 보면 결국 이러한 비공식적, 대화식 테스트를 공식적, 자동화 테스트로 바꾸고 싶어진다. 이 프로세스를 **단위 테스트(unit testing)**라고 한다.  
+- 이제 함수가 있으니 원 예제를 단순화해보자 
+
+```{r}
+df$a <- rescale01(df$a)
+df$b <- rescale01(df$b)
+df$c <- rescale01(df$c)
+df$d <- rescale01(df$d)
+```
+
+- 원본과 비교하면 이 코드는 이해하기 쉽고, 한 종류의 복사하여 붙여넣기 오류도 제거했다.  
+
+- 함수의 다른 장점은 요구사항이 변경되면 한 곳에서만 변경 작업을 하면 된다는 것이다.   
+
+- 예를 들어 일부 변수가 무한값을 포함하면 rescale01()은 작동하지 않는다는 것을 알았다고 하자.
+
+```{r}
+x <- c(1:10, Inf)
+rescale01(x)
+```
+
+- 코드를 함수로 추출했기 때문에 한 곳만 수정하면 된다.  
+  
+  
+**finite = TRUE를 추가!** 
+```{r}
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE, finite = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+rescale01(x)
+```
+- 이는 '반복하지 말라(do not repeat yourself, DRY)' 원칙의 중요한 부분
+
+### + 연습문제  
+1. TRUE가 rescale01()의 매개변수가 아닌 이유는 무엇인가? x가 결측값 하나를 포함하고 na.rm이 FALSE면 어떻게 되는가?  
+2. rescale01()의 두 번째 버전에서 무한값들은 변경되지 않았다. -Inf는 0으로, Inf는 1로 매핑되도록 rescale01()을 다시 작성하라.  
+3. 다음의 짧은 코드 조각을 함수로 변환하는 연습을 하라. 각 함수가 무엇을 하는지 생각해보라. 뭐라고 부르겠는가? 인수 몇 개가 필요한가? 좀 더 표현력이 있거나 덜 중복되도록 다시 작성할 수 있는가? 
+```{r}
+mean(is.na(x))
+
+x / sum(x, na.rm = TRUE)
+
+sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE)
+```
+4. 수치형 벡터의 분산과 왜도(skew)를 계산하는 함수를 작성하라. 
+
+![](img/exercise1.png)
+5. 같은 길이의 두 벡터를 입력으로 하여, 두 벡터 모두 NA인 위치를 반환하는 함수 both_na()를 작성하라.  
+6. 다름 두 함수는 무슨 작업을 하는가? 이 짧은 함수들이 유용한 이유는 무엇인가? 
+```{r}
+is_directory <- function(x) file.info(x)$isdir
+is_readable <- function(x) file.access(x, 4) == 0
+```
+7. '작은 토끼 Foo Foo'의 전체 가사를 읽어라. 이 노래에는 중복이 많다. 초기 파이핑 예제를 확장하여 전체 노래를 다시 만들고 함수를 사용하여 중복을 줄여보라.   
+  
+## 15.3 함수는 사람과 컴퓨터를 위한 것     
+
