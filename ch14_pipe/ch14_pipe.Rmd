@@ -16,7 +16,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-https://gomguard.tistory.com/243
+[](https://gomguard.tistory.com/243)
+
 파이프의 종류 4가지
 ```
 %>% (파이프)
