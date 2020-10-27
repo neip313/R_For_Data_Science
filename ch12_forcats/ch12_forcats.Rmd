@@ -1,15 +1,22 @@
 ---
-title: "12ch forcats로 하는 팩터형"
+title: "ch12_forcats로 하는 팩터형"
 author: "Han Kwang su"
-date: '2020 10 8 '
-output: html_document
+date: '2020 10 8'
+output:   
+  html_document:
+   toc: true
+   toc_float:
+     collapsed: false
+     smooth_scroll: true
+   theme: united
+   highlight: textmate
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 12.1 forcats로하는팩터형 들어가기
+## 12.1 forcats로 하는팩터형 들어가기
 R에서 팩터형은 범주형 변수에 사용되는데, 범주형변수란 가질수 있는 값이 미리고정되고 또알려진 변수를 말한다.팩터형은 문자형 벡터를 알파벳순이 아닌 순서로 표시하고 싶을 떄도이용할수있다. 팩터형의 역사적 맥락을 자세히 보려면 로커 팽의 (stringASfactor:an unauthorized biography) 와 토마스럼리 의
  (stringasfacter=sigh)를 읽오보길 바랍니다
  
